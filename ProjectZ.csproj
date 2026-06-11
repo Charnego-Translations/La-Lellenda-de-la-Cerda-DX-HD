@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework Condition="$([MSBuild]::IsOSPlatform('Windows'))">net8.0-windows</TargetFramework>
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
@@ -56,6 +57,10 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+    <!-- Windows-only: SharpDX for XAudio2 audio output (CDynamicEffectInstance);
+         System.Windows.Forms is available via net8.0-windows TFM on Windows -->
+    <PackageReference Condition="$([MSBuild]::IsOSPlatform('Windows'))" Include="SharpDX" Version="4.0.1" />
+    <PackageReference Condition="$([MSBuild]::IsOSPlatform('Windows'))" Include="SharpDX.XAudio2" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>
