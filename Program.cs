@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Windows.Forms;
 
 namespace ProjectZ
 {
     public static class Program
     {
-        [STAThread]
         static void Main(string[] args)
         {
             var editorMode = false;
@@ -18,6 +16,10 @@ namespace ProjectZ
                 else if (arg == "loadSave")
                     loadFirstSave = true;
             }
+
+            // Set up cross-platform audio output
+            Game1.GbsPlayer.SetAudioOutput(new GbsPlayer.OpenALOutput(44100));
+
 #if !DEBUG
             try
 #endif
@@ -28,7 +30,7 @@ namespace ProjectZ
 #if !DEBUG
             catch (Exception exception)
             {
-               MessageBox.Show(exception.StackTrace, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+               Console.Error.WriteLine("Fatal error: {0}\n{1}", exception.Message, exception.StackTrace);
                throw;
             }
 #endif
