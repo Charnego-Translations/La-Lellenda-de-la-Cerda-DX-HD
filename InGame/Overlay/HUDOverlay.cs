@@ -104,7 +104,7 @@ namespace ProjectZ.InGame.Overlay
         public void DrawBlur(SpriteBatch spriteBatch)
         {
             // draw the save icon
-            Resources.RoundedCornerBlurEffect.Parameters["blurColor"].SetValue((Values.OverlayBackgroundBlurColor * _saveIconTransparency).ToVector4());
+            Resources.SetEffectParameter(Resources.RoundedCornerBlurEffect, "blurColor", (Values.OverlayBackgroundBlurColor * _saveIconTransparency).ToVector4());
             DrawHelper.DrawNormalized(spriteBatch, _saveIcon.Texture, _saveIconPosition, _saveIcon.ScaledRectangle, Values.OverlayBackgroundColor * _saveIconTransparency, Game1.UiScale);
         }
 

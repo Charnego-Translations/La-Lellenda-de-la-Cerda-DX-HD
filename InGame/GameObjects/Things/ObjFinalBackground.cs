@@ -283,7 +283,7 @@ namespace ProjectZ.InGame.GameObjects.Things
             // looking right on resize makes hard
             // not so sure how the position value in the shader works
             var shaderOffset = (new Vector2(MapManager.Camera.Location.X + 4000, MapManager.Camera.Location.Y) * 0.85f - new Vector2(Game1.RenderWidth, Game1.RenderHeight) / 2);
-            Resources.CloudShader.Effect.Parameters["offset"].SetValue(shaderOffset);
+            Resources.SetEffectParameter(Resources.CloudShader.Effect, "offset", shaderOffset);
             Resources.CloudShader.FloatParameter["scale"] = MapManager.Camera.Scale;
             Resources.CloudShader.FloatParameter["scaleX"] = MapManager.Camera.Scale;
             Resources.CloudShader.FloatParameter["scaleY"] = MapManager.Camera.Scale;
@@ -292,8 +292,8 @@ namespace ProjectZ.InGame.GameObjects.Things
             {
                 spriteBatch.End();
                 ObjectManager.SpriteBatchBegin(spriteBatch, Resources.CloudShader);
-                Resources.CloudShader.Effect.Parameters["color0"].SetValue(cloud.color0);
-                Resources.CloudShader.Effect.Parameters["color1"].SetValue(cloud.color1);
+                Resources.SetEffectParameter(Resources.CloudShader.Effect, "color0", cloud.color0);
+                Resources.SetEffectParameter(Resources.CloudShader.Effect, "color1", cloud.color1);
 
                 var offset = -(_spawnPosition.Position - (new Vector2(MapManager.Camera.X, MapManager.Camera.Y) / MapManager.Camera.Scale)) * new Vector2(1.0f, 0.35f) * cloud.offset;
                 var position = cloud.position + offset;

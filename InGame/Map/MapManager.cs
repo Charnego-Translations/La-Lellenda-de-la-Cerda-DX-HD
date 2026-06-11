@@ -161,8 +161,8 @@ namespace ProjectZ.InGame.Map
             if (Game1.GameManager.UseShockEffect)
                 return;
 
-            Resources.BBlurEffectH.Parameters["pixelX"].SetValue(1.0f / blurRT1.Width);
-            Resources.BBlurEffectV.Parameters["pixelY"].SetValue(1.0f / blurRT1.Height);
+            Resources.SetEffectParameter(Resources.BBlurEffectH, "pixelX", 1.0f / blurRT1.Width);
+            Resources.SetEffectParameter(Resources.BBlurEffectV, "pixelY", 1.0f / blurRT1.Height);
 
             // v blur
             Game1.Graphics.GraphicsDevice.SetRenderTarget(blurRT1);

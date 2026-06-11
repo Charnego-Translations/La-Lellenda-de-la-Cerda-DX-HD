@@ -86,6 +86,26 @@ namespace ProjectZ.InGame.Things
         public static int GameFontHeight = 10;
         public static int EditorFontHeight;
 
+        public static void SetEffectParameter(Effect effect, string key, object value)
+        {
+            if (effect?.Parameters[key] != null)
+                effect.Parameters[key].SetValue((dynamic)value);
+        }
+
+        private static Effect LoadEffectSafe(ContentManager content, string path)
+        {
+            try
+            {
+                return content.Load<Effect>(path);
+            }
+            catch (ContentLoadException ex)
+            {
+                System.Console.Error.WriteLine($"Warning: Could not load effect '{path}': {ex.Message}");
+                System.Console.Error.WriteLine($"Visual effects will be disabled (compile shaders on Windows for full features)");
+                return null;
+            }
+        }
+
         // resources needed to start showing the intro
         public static void LoadIntro(GraphicsDevice graphics, ContentManager content)
         {
@@ -96,8 +116,8 @@ namespace ProjectZ.InGame.Things
 
             LoadTexturesFromFolder(Values.PathContentFolder + "/Intro/");
 
-            BlurEffect = content.Load<Effect>("Shader/EffectBlur");
-            RoundedCornerBlurEffect = content.Load<Effect>("Shader/RoundedCornerEffectBlur");
+            BlurEffect = LoadEffectSafe(content, "Shader/EffectBlur");
+            RoundedCornerBlurEffect = LoadEffectSafe(content, "Shader/RoundedCornerEffectBlur");
 
             AddSoundEffect(content, "D378-15-0F");
             AddSoundEffect(content, "D378-12-0C");
@@ -178,44 +198,48 @@ namespace ProjectZ.InGame.Things
             SprFogWar = content.Load<Texture2D>("Objects/fogWar");
 
             // load shader
-            RoundedCornerEffect = content.Load<Effect>("Shader/RoundedCorner");
-            BlurEffectH = content.Load<Effect>("Shader/BlurH");
-            BlurEffectV = content.Load<Effect>("Shader/BlurV");
-            BBlurEffectH = content.Load<Effect>("Shader/BBlurH");
-            BBlurEffectV = content.Load<Effect>("Shader/BBlurV");
-            FullShadowEffect = content.Load<Effect>("Shader/FullShadowEffect");
+            RoundedCornerEffect = LoadEffectSafe(content, "Shader/RoundedCorner");
+            BlurEffectH = LoadEffectSafe(content, "Shader/BlurH");
+            BlurEffectV = LoadEffectSafe(content, "Shader/BlurV");
+            BBlurEffectH = LoadEffectSafe(content, "Shader/BBlurH");
+            BBlurEffectV = LoadEffectSafe(content, "Shader/BBlurV");
+            FullShadowEffect = LoadEffectSafe(content, "Shader/FullShadowEffect");
             // used in the inventory
-            SaturationEffect = content.Load<Effect>("Shader/SaturationFilter");
-            WobbleEffect = content.Load<Effect>("Shader/WobbleShader");
-            CircleShader = content.Load<Effect>("Shader/CircleShader");
-            LightShader = content.Load<Effect>("Shader/LightShader");
-            LightFadeShader = content.Load<Effect>("Shader/LightFadeShader");
+            SaturationEffect = LoadEffectSafe(content, "Shader/SaturationFilter");
+            WobbleEffect = LoadEffectSafe(content, "Shader/WobbleShader");
+            CircleShader = LoadEffectSafe(content, "Shader/CircleShader");
+            LightShader = LoadEffectSafe(content, "Shader/LightShader");
+            LightFadeShader = LoadEffectSafe(content, "Shader/LightFadeShader");
 
-            var cloudShader = content.Load<Effect>("Shader/ColorCloud");
+            var cloudShader = LoadEffectSafe(content, "Shader/ColorCloud");
             CloudShader = new SpriteShader(cloudShader);
             CloudShader.FloatParameter.Add("scaleX", 1);
             CloudShader.FloatParameter.Add("scaleY", 1);
 
             NoiseTexture = GetTexture("thanos noise.png");
-            ThanosShader = content.Load<Effect>("Shader/ThanosShader");
-            ThanosShader.Parameters["NoiceTexture"].SetValue(NoiseTexture);
-            // only works for sprites using the sequence sprite
-            ThanosShader.Parameters["Scale"].SetValue(new Vector2(
-                    (float)SprGameSequencesFinal.Width / NoiseTexture.Width,
-                    (float)SprGameSequencesFinal.Height / NoiseTexture.Height));
+            ThanosShader = LoadEffectSafe(content, "Shader/ThanosShader");
+            if (ThanosShader != null)
+            {
+                ThanosShader.Parameters["NoiceTexture"].SetValue(NoiseTexture);
+                ThanosShader.Parameters["Scale"].SetValue(new Vector2(
+                        (float)SprGameSequencesFinal.Width / NoiseTexture.Width,
+                        (float)SprGameSequencesFinal.Height / NoiseTexture.Height));
+            }
 
             ThanosSpriteShader0 = new SpriteShader(ThanosShader);
             ThanosSpriteShader0.FloatParameter.Add("Percentage", 0);
             ThanosSpriteShader1 = new SpriteShader(ThanosShader);
             ThanosSpriteShader1.FloatParameter.Add("Percentage", 0);
 
-            WindFishShader = new SpriteShader(content.Load<Effect>("Shader/WaleShader"));
+            var waleShader = LoadEffectSafe(content, "Shader/WaleShader");
+            WindFishShader = new SpriteShader(waleShader);
             WindFishShader.FloatParameter.Add("Offset", 0);
             WindFishShader.FloatParameter.Add("Period", 0);
 
-            ColorShader = new SpriteShader(content.Load<Effect>("Shader/ColorShader"));
+            var colorShaderEffect = LoadEffectSafe(content, "Shader/ColorShader");
+            ColorShader = new SpriteShader(colorShaderEffect);
 
-            var damageShader = content.Load<Effect>("Shader/DamageShader");
+            var damageShader = LoadEffectSafe(content, "Shader/DamageShader");
 
             // crow needs mark1 to have a value bigger than 0.605333
             DamageSpriteShader0 = new SpriteShader(damageShader);
@@ -227,7 +251,7 @@ namespace ProjectZ.InGame.Things
             DamageSpriteShader1.FloatParameter.Add("mark0", 0.1f);
             DamageSpriteShader1.FloatParameter.Add("mark1", 0.55f);
 
-            var shockShader = content.Load<Effect>("Shader/ShockEffect");
+            var shockShader = LoadEffectSafe(content, "Shader/ShockEffect");
 
             ShockShader0 = new SpriteShader(shockShader);
             ShockShader0.FloatParameter.Add("mark0", 0.0f);

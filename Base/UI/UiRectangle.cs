@@ -20,11 +20,11 @@ namespace ProjectZ.Base.UI
 
         public override void DrawBlur(SpriteBatch spriteBatch)
         {
-            Resources.RoundedCornerBlurEffect.Parameters["scale"].SetValue(Game1.UiScale);
-            Resources.RoundedCornerBlurEffect.Parameters["blurColor"].SetValue(BlurColor.ToVector4());
-            Resources.RoundedCornerBlurEffect.Parameters["radius"].SetValue(Radius);
-            Resources.RoundedCornerBlurEffect.Parameters["width"].SetValue(Rectangle.Width / Game1.UiScale);
-            Resources.RoundedCornerBlurEffect.Parameters["height"].SetValue(Rectangle.Height / Game1.UiScale);
+            Resources.SetEffectParameter(Resources.RoundedCornerBlurEffect, "scale", Game1.UiScale);
+            Resources.SetEffectParameter(Resources.RoundedCornerBlurEffect, "blurColor", BlurColor.ToVector4());
+            Resources.SetEffectParameter(Resources.RoundedCornerBlurEffect, "radius", Radius);
+            Resources.SetEffectParameter(Resources.RoundedCornerBlurEffect, "width", Rectangle.Width / Game1.UiScale);
+            Resources.SetEffectParameter(Resources.RoundedCornerBlurEffect, "height", Rectangle.Height / Game1.UiScale);
 
             // draw the blur texture
             spriteBatch.Draw(Resources.SprWhite, Rectangle, BackgroundColor);

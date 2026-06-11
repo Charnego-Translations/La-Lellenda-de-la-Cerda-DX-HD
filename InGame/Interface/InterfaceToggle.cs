@@ -107,14 +107,14 @@ namespace ProjectZ.InGame.Interface
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 drawPosition, float scale, float transparency)
         {
-            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiScale);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "scale", Game1.UiScale);
 
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Game1.GetMatrix);
 
-            Resources.RoundedCornerEffect.Parameters["radius"].SetValue(4.0f);
-            Resources.RoundedCornerEffect.Parameters["width"].SetValue(_toggleBackgroundRectangle.Width);
-            Resources.RoundedCornerEffect.Parameters["height"].SetValue(_toggleBackgroundRectangle.Height);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "radius", 4.0f);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "width", _toggleBackgroundRectangle.Width);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "height", _toggleBackgroundRectangle.Height);
 
             // draw the toggle background
             spriteBatch.Draw(Resources.SprWhite, new Rectangle(
@@ -124,9 +124,9 @@ namespace ProjectZ.InGame.Interface
                 (int)(_toggleBackgroundRectangle.Height * scale)),
                 (_toggleState ? _colorToggledBackground : _colorNotToggledBackground) * transparency);
 
-            Resources.RoundedCornerEffect.Parameters["radius"].SetValue(4.0f);
-            Resources.RoundedCornerEffect.Parameters["width"].SetValue(_toggleRectangle.Width);
-            Resources.RoundedCornerEffect.Parameters["height"].SetValue(_toggleRectangle.Height);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "radius", 4.0f);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "width", _toggleRectangle.Width);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "height", _toggleRectangle.Height);
 
             // draw the toggle
             spriteBatch.Draw(Resources.SprWhite, new Rectangle(
