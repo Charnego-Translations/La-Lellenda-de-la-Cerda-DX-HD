@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace ProjectZ.InGame.Things
@@ -35,7 +36,7 @@ namespace ProjectZ.InGame.Things
 
         public static string PathSaveFolder = "SaveFiles/";
         
-        public static string PathContentFolder = "Data/";
+        public static string PathContentFolder = AppContext.BaseDirectory + "Data/";
         public static string PathLanguageFolder => PathContentFolder + "Languages/";
         public static string PathMapsFolder => PathContentFolder + "Maps/";
         public static string PathTilesetFolder => PathContentFolder + "Maps/Tilesets/";

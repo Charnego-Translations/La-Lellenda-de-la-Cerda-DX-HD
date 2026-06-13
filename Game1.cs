@@ -156,7 +156,7 @@ namespace ProjectZ
 #endif
 
             Graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = AppContext.BaseDirectory + "Content";
 
             Graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Graphics.PreferredBackBufferWidth = 1500;
