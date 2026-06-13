@@ -156,7 +156,11 @@ namespace ProjectZ
 #endif
 
             Graphics = new GraphicsDeviceManager(this);
+#if MACOSX
             Content.RootDirectory = AppContext.BaseDirectory + "Content";
+#else
+            Content.RootDirectory = "Content";
+#endif
 
             Graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Graphics.PreferredBackBufferWidth = 1500;
