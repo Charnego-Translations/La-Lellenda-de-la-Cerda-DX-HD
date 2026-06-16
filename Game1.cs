@@ -814,7 +814,7 @@ namespace ProjectZ
                     }
                 }
             }
-#elif MACOSX
+#else
             GameSettings.IsFullscreen = !GameSettings.IsFullscreen;
 
             if (!Graphics.IsFullScreen)
