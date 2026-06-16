@@ -31,6 +31,11 @@ namespace GbsPlayer
             Cpu = new GameBoyCPU(Memory, Cartridge, SoundGenerator);
         }
 
+        public void SetAudioOutput(IAudioOutput audioOutput)
+        {
+            SoundGenerator.SetAudioOutput(audioOutput);
+        }
+
         public void OnExit()
         {
             _exitThread = true;

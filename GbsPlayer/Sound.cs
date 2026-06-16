@@ -1,11 +1,10 @@
 ﻿using System;
-using Microsoft.Xna.Framework.Audio;
 
 namespace GbsPlayer
 {
     public class Sound
     {
-        public CDynamicEffectInstance _soundOutput;
+        public IAudioOutput _soundOutput;
 
         public bool WasStopped;
         private int _endBufferCount;
@@ -133,7 +132,11 @@ namespace GbsPlayer
 
         public Sound()
         {
-            _soundOutput = new CDynamicEffectInstance(OutputRate);
+        }
+
+        public void SetAudioOutput(IAudioOutput audioOutput)
+        {
+            _soundOutput = audioOutput;
         }
 
         public void Init()
@@ -162,12 +165,12 @@ namespace GbsPlayer
 
         public bool IsPlaying()
         {
-            return _soundOutput.State == SoundState.Playing;
+            return _soundOutput?.State == SoundState.Playing;
         }
 
         public bool FinishedPlaying()
         {
-            return _soundOutput.GetPendingBufferCount() == 0;
+            return _soundOutput?.GetPendingBufferCount() == 0;
         }
 
         public void SetStopTime(float length)
@@ -177,34 +180,34 @@ namespace GbsPlayer
 
         public void Play()
         {
-            _soundOutput.Play();
+            _soundOutput?.Play();
         }
 
         public void Pause()
         {
-            _soundOutput.Pause();
+            _soundOutput?.Pause();
         }
 
         public void Resume()
         {
-            _soundOutput.Resume();
+            _soundOutput?.Resume();
         }
 
         public void Stop()
         {
             _bufferCount = 0;
             _bufferIndex = 0;
-            _soundOutput.Stop();
+            _soundOutput?.Stop();
         }
 
         public void SetVolume(float volume)
         {
-            _soundOutput.SetVolume(volume);
+            _soundOutput?.SetVolume(volume);
         }
 
         public void AddCurrentBuffer()
         {
-            _soundOutput.SubmitBuffer(_soundBuffer, 0, _bufferIndex);
+            _soundOutput?.SubmitBuffer(_soundBuffer, 0, _bufferIndex);
             _bufferIndex = 0;
         }
 

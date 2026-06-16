@@ -1,67 +1,104 @@
 <Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0-windows</TargetFramework>
-		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
-		<PublishReadyToRun>false</PublishReadyToRun>
-		<TieredCompilation>false</TieredCompilation>
-		<UseWindowsForms>true</UseWindowsForms>
-		<MonoGamePlatform>Windows</MonoGamePlatform>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<OutputPath></OutputPath>
-		<DefineConstants>TRACE;WINDOWS</DefineConstants>
-	</PropertyGroup>
-	<ItemGroup>
-		<Compile Remove="Content\bin\**" />
-		<Compile Remove="Content\obj\**" />
-		<Compile Remove="Fix\**" />
-		<EmbeddedResource Remove="Content\bin\**" />
-		<EmbeddedResource Remove="Content\obj\**" />
-		<EmbeddedResource Remove="Fix\**" />
-		<None Remove="Content\bin\**" />
-		<None Remove="Content\obj\**" />
-		<None Remove="Fix\**" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Remove=".gitignore" />
-		<None Remove=".gitmodules" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.1.303" />
-		<PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
-		<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
-		<PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
-	</ItemGroup>
-	<ItemGroup>
-		<Content Include="Data\**">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-	<PropertyGroup>
-		<StartupObject>ProjectZ.Program</StartupObject>
-		<AssemblyName>La Lellenda de la Cerda DX HD</AssemblyName>
-		<PublishSingleFile>true</PublishSingleFile>
-		<ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
-	</PropertyGroup>
-	<Target Name="RestoreDotnetTools" BeforeTargets="Restore">
-		<Message Text="Restoring dotnet tools" Importance="High" />
-		<Exec Command="dotnet tool restore" />
-	</Target>
-	<Target Name="RemovePreviousPublish" BeforeTargets="Build">
-		<RemoveDir Directories="$(PublishDir)"></RemoveDir>
-	</Target>
-	<Target Name="CleanPublish" AfterTargets="Publish">
-		<Delete Files="$(PublishDir)/assimp.dll" />
-		<Delete Files="$(PublishDir)/ffmpeg.exe" />
-		<Delete Files="$(PublishDir)/ffprobe.exe" />
-		<Delete Files="$(PublishDir)/FreeImage.dll" />
-		<Delete Files="$(PublishDir)/freetype6.dll" />
-		<Delete Files="$(PublishDir)/libmojoshader_64.dll" />
-		<Delete Files="$(PublishDir)/Link's Awakening DX HD.dll.config" />
-		<Delete Files="$(PublishDir)/Link's Awakening DX HD.pdb" />
-		<Delete Files="$(PublishDir)/nvtt.dll" />
-		<Delete Files="$(PublishDir)/PVRTexLibWrapper.dll" />
-	</Target>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework Condition="$([MSBuild]::IsOSPlatform('Windows'))">net8.0-windows</TargetFramework>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <TieredCompilation>false</TieredCompilation>
+    <MonoGamePlatform>DesktopGL</MonoGamePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants);TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <DefineConstants>$(DefineConstants);MACOSX</DefineConstants>
+    <!-- MGCB shader compiler requires Wine (d3dcompiler_47) which isn't available on macOS ARM64 -->
+    <EnableMGCBItems>false</EnableMGCBItems>
+  </PropertyGroup>
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <DefineConstants>$(DefineConstants);LINUX</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Content\bin\**" />
+    <Compile Remove="Content\obj\**" />
+    <Compile Remove="Fix\**" />
+    <EmbeddedResource Remove="Content\bin\**" />
+    <EmbeddedResource Remove="Content\obj\**" />
+    <EmbeddedResource Remove="Fix\**" />
+    <None Remove="Content\bin\**" />
+    <None Remove="Content\obj\**" />
+    <None Remove="Fix\**" />
+    <!-- Remove old multi-module directories if they exist -->
+    <Compile Remove="ProjectZ.Core\**" />
+    <Compile Remove="ProjectZ.DesktopGL\**" />
+    <Compile Remove="ProjectZ.Android\**" />
+    <EmbeddedResource Remove="ProjectZ.Core\**" />
+    <EmbeddedResource Remove="ProjectZ.DesktopGL\**" />
+    <EmbeddedResource Remove="ProjectZ.Android\**" />
+    <None Remove="ProjectZ.Core\**" />
+    <None Remove="ProjectZ.DesktopGL\**" />
+    <None Remove="ProjectZ.Android\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove=".gitmodules" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+    <!-- Windows-only: SharpDX for XAudio2 audio output (CDynamicEffectInstance);
+         System.Windows.Forms is available via net8.0-windows TFM on Windows -->
+    <PackageReference Condition="$([MSBuild]::IsOSPlatform('Windows'))" Include="SharpDX" Version="4.0.1" />
+    <PackageReference Condition="$([MSBuild]::IsOSPlatform('Windows'))" Include="SharpDX.XAudio2" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <StartupObject>ProjectZ.Program</StartupObject>
+    <AssemblyName>La Lellenda de la Cerda DX HD</AssemblyName>
+    <PublishSingleFile>true</PublishSingleFile>
+    <ApplicationIcon Condition="'$(OS)' == 'Windows_NT'">Resources\Icon.ico</ApplicationIcon>
+    <ApplicationManifest Condition="'$(OS)' == 'Windows_NT'">app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
+    <Message Text="Restoring dotnet tools" Importance="High" />
+    <Exec Command="dotnet tool restore" />
+  </Target>
+  <Target Name="RemovePreviousPublish" BeforeTargets="Build">
+    <RemoveDir Directories="$(PublishDir)"></RemoveDir>
+  </Target>
+
+  <!-- On macOS, the MGCB effect compiler (MGFXC) requires Wine to compile shaders
+       (the .fx files use HLSL compiled by d3dcompiler_47.dll).
+       Non-shader content builds fine via ARM64-native libraries (FreeImage, freetype).
+       This target bypasses the MGCB failure by copying any cached built content. -->
+  <Target Name="CopyMacContentToOutput" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <PropertyGroup>
+      <_ContentCache>Content/bin/DesktopGL/Content</_ContentCache>
+      <_ContentOutput>$(OutputPath)Content</_ContentOutput>
+    </PropertyGroup>
+    <Message Text="Copying built content to output directory..." Importance="High" />
+    <ItemGroup>
+      <_CachedXnbFiles Include="$(_ContentCache)/**/*.xnb" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_CachedXnbFiles)" DestinationFolder="$(_ContentOutput)/%(RecursiveDir)" />
+  </Target>
 </Project>

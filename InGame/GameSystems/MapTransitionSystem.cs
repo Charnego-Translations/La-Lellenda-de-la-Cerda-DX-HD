@@ -6,10 +6,6 @@ using ProjectZ.InGame.GameObjects.Things;
 using ProjectZ.InGame.Map;
 using ProjectZ.InGame.SaveLoad;
 using ProjectZ.InGame.Things;
-#if WINDOWS
-using System.Windows.Forms;
-#endif
-
 namespace ProjectZ.InGame.GameSystems
 {
     internal class MapTransitionSystem : GameSystem
@@ -416,7 +412,8 @@ namespace ProjectZ.InGame.GameSystems
             {
 #if WINDOWS
                 // show the error message instead of just crashing the game
-                MessageBox.Show(exception.StackTrace, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(exception.StackTrace, exception.Message,
+                    System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
 #endif
                 throw;
             }

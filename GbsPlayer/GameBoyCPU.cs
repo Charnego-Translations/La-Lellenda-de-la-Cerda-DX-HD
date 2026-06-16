@@ -145,6 +145,9 @@ namespace GbsPlayer
             if (!IsRunning)
                 return;
 
+            if (_gbSound._soundOutput == null)
+                return;
+
             // create a 5 buffer puffer
             while (!_gbSound.WasStopped && _gbSound._soundOutput.GetPendingBufferCount() < 10)
             {

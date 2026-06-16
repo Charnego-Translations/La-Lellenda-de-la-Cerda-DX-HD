@@ -45,12 +45,12 @@ namespace ProjectZ.InGame.GameObjects.Things
                 var centerX = gameWidth / 2.0f - (MapManager.Camera.Location.X - playerPosition.X);
                 var centerY = gameHeight / 2.0f - (MapManager.Camera.Location.Y - playerPosition.Y);
 
-                Resources.CircleShader.Parameters["softRad"].SetValue(15f);
-                Resources.CircleShader.Parameters["size"].SetValue(_circleSize);
-                Resources.CircleShader.Parameters["centerX"].SetValue(centerX);
-                Resources.CircleShader.Parameters["centerY"].SetValue(centerY);
-                Resources.CircleShader.Parameters["width"].SetValue(gameWidth);
-                Resources.CircleShader.Parameters["height"].SetValue(gameHeight);
+                Resources.SetEffectParameter(Resources.CircleShader, "softRad", 15f);
+                Resources.SetEffectParameter(Resources.CircleShader, "size", _circleSize);
+                Resources.SetEffectParameter(Resources.CircleShader, "centerX", centerX);
+                Resources.SetEffectParameter(Resources.CircleShader, "centerY", centerY);
+                Resources.SetEffectParameter(Resources.CircleShader, "width", gameWidth);
+                Resources.SetEffectParameter(Resources.CircleShader, "height", gameHeight);
 
                 // draw the circle
                 spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointWrap, null, null, Resources.CircleShader, Game1.GetMatrix);
@@ -62,14 +62,14 @@ namespace ProjectZ.InGame.GameObjects.Things
                 // draw the wobble transition effect
                 Game1.GameManager.ChangeRenderTarget();
 
-                Resources.WobbleEffect.Parameters["width"].SetValue(gameWidth);
-                Resources.WobbleEffect.Parameters["height"].SetValue(gameHeight);
-                Resources.WobbleEffect.Parameters["scale"].SetValue(MapManager.Camera.Scale);
-                Resources.WobbleEffect.Parameters["brightness"].SetValue(Brightness);
+                Resources.SetEffectParameter(Resources.WobbleEffect, "width", gameWidth);
+                Resources.SetEffectParameter(Resources.WobbleEffect, "height", gameHeight);
+                Resources.SetEffectParameter(Resources.WobbleEffect, "scale", MapManager.Camera.Scale);
+                Resources.SetEffectParameter(Resources.WobbleEffect, "brightness", Brightness);
 
-                Resources.WobbleEffect.Parameters["offset"].SetValue(WobblePercentage * 30);
-                Resources.WobbleEffect.Parameters["offsetWidth"].SetValue((0.5f - MathF.Cos(WobblePercentage * 4) / 2) * 3);
-                Resources.WobbleEffect.Parameters["offsetHeight"].SetValue(16);
+                Resources.SetEffectParameter(Resources.WobbleEffect, "offset", WobblePercentage * 30);
+                Resources.SetEffectParameter(Resources.WobbleEffect, "offsetWidth", (0.5f - MathF.Cos(WobblePercentage * 4) / 2) * 3);
+                Resources.SetEffectParameter(Resources.WobbleEffect, "offsetHeight", 16);
 
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, Resources.WobbleEffect);
                 spriteBatch.Draw(Game1.GameManager.GetLastRenderTarget(), Vector2.Zero, Color.White);

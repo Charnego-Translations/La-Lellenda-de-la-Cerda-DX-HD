@@ -258,13 +258,12 @@ namespace ProjectZ.InGame.Things
                 // render the shadows
                 RenderShadows(spriteBatch);
 
-                Resources.BlurEffectH.Parameters["pixelX"].SetValue(1.0f / _shadowRenderTarget.Width);
-                Resources.BlurEffectV.Parameters["pixelY"].SetValue(1.0f / _shadowRenderTarget.Height);
-
-                Resources.BlurEffectH.Parameters["mult0"].SetValue(0.35f);
-                Resources.BlurEffectH.Parameters["mult1"].SetValue(0.15f);
-                Resources.BlurEffectV.Parameters["mult0"].SetValue(0.35f);
-                Resources.BlurEffectV.Parameters["mult1"].SetValue(0.15f);
+            Resources.SetEffectParameter(Resources.BlurEffectH, "pixelX", 1.0f / _shadowRenderTarget.Width);
+            Resources.SetEffectParameter(Resources.BlurEffectV, "pixelY", 1.0f / _shadowRenderTarget.Height);
+            Resources.SetEffectParameter(Resources.BlurEffectH, "mult0", 0.35f);
+            Resources.SetEffectParameter(Resources.BlurEffectH, "mult1", 0.15f);
+            Resources.SetEffectParameter(Resources.BlurEffectV, "mult0", 0.35f);
+            Resources.SetEffectParameter(Resources.BlurEffectV, "mult1", 0.15f);
 
                 // v blur
                 Game1.Graphics.GraphicsDevice.SetRenderTarget(_shadowRenderTargetBlur);
@@ -313,11 +312,11 @@ namespace ProjectZ.InGame.Things
                 _lightRenderTarget = _inactiveRenderTarget1;
 
                 Game1.Graphics.GraphicsDevice.Clear(Color.Black);
-                Resources.LightShader.Parameters["sprLight"].SetValue(_lightRenderTarget);
-                Resources.LightShader.Parameters["lightState"].SetValue(MapManager.CurrentMap.LightState);
-                Resources.LightShader.Parameters["mode"].SetValue(0);
-                Resources.LightShader.Parameters["width"].SetValue(_lightRenderTarget.Width);
-                Resources.LightShader.Parameters["height"].SetValue(_lightRenderTarget.Height);
+                Resources.SetEffectParameter(Resources.LightShader, "sprLight", _lightRenderTarget);
+                Resources.SetEffectParameter(Resources.LightShader, "lightState", MapManager.CurrentMap.LightState);
+                Resources.SetEffectParameter(Resources.LightShader, "mode", 0);
+                Resources.SetEffectParameter(Resources.LightShader, "width", _lightRenderTarget.Width);
+                Resources.SetEffectParameter(Resources.LightShader, "height", _lightRenderTarget.Height);
 
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.AnisotropicClamp, null, null, Resources.LightShader);
                 spriteBatch.Draw(_inactiveRenderTarget2, Vector2.Zero, Color.White);
@@ -330,11 +329,11 @@ namespace ProjectZ.InGame.Things
 
             if (MapManager.CurrentMap.UseLight && !UseShockEffect && DrawPlayerOnTopPercentage > 0 && _lightRenderTarget != null)
             {
-                Resources.LightShader.Parameters["sprLight"].SetValue(_lightRenderTarget);
-                Resources.LightShader.Parameters["lightState"].SetValue(DrawPlayerOnTopPercentage);
-                Resources.LightShader.Parameters["mode"].SetValue(1);
-                Resources.LightShader.Parameters["width"].SetValue(_lightRenderTarget.Width);
-                Resources.LightShader.Parameters["height"].SetValue(_lightRenderTarget.Height);
+                Resources.SetEffectParameter(Resources.LightShader, "sprLight", _lightRenderTarget);
+                Resources.SetEffectParameter(Resources.LightShader, "lightState", DrawPlayerOnTopPercentage);
+                Resources.SetEffectParameter(Resources.LightShader, "mode", 1);
+                Resources.SetEffectParameter(Resources.LightShader, "width", _lightRenderTarget.Width);
+                Resources.SetEffectParameter(Resources.LightShader, "height", _lightRenderTarget.Height);
 
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, Resources.LightShader, MapManager.Camera.TransformMatrix);
                 MapManager.ObjLink.DrawTransition(spriteBatch);

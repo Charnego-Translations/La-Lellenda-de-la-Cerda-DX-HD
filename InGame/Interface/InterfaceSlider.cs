@@ -186,14 +186,14 @@ namespace ProjectZ.InGame.Interface
         {
             base.Draw(spriteBatch, drawPosition, scale, transparency);
 
-            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiScale);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "scale", Game1.UiScale);
 
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Game1.GetMatrix);
 
-            Resources.RoundedCornerEffect.Parameters["radius"].SetValue(2.0f);
-            Resources.RoundedCornerEffect.Parameters["width"].SetValue(_sliderBackgroundRectangle.Width);
-            Resources.RoundedCornerEffect.Parameters["height"].SetValue(_sliderBackgroundRectangle.Height);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "radius", 2.0f);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "width", _sliderBackgroundRectangle.Width);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "height", _sliderBackgroundRectangle.Height);
 
             // draw the toggle background line
             spriteBatch.Draw(Resources.SprWhite, new Rectangle(
@@ -202,9 +202,9 @@ namespace ProjectZ.InGame.Interface
                 (int)(_sliderBackgroundRectangle.Width * scale),
                 (int)(_sliderBackgroundRectangle.Height * scale)), _colorSliderBackground * transparency);
 
-            Resources.RoundedCornerEffect.Parameters["radius"].SetValue(2.0f);
-            Resources.RoundedCornerEffect.Parameters["width"].SetValue(_sliderRectangle.Width);
-            Resources.RoundedCornerEffect.Parameters["height"].SetValue(_sliderRectangle.Height);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "radius", 2.0f);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "width", _sliderRectangle.Width);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "height", _sliderRectangle.Height);
 
             // draw the slider 
             var sliderPosition = (_sliderRectangle.X + _animationStepPosition);

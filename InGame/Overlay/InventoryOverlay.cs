@@ -210,18 +210,18 @@ namespace ProjectZ.InGame.Overlay
             Game1.Graphics.GraphicsDevice.SetRenderTarget(_renderTarget);
             Game1.Graphics.GraphicsDevice.Clear(Color.Transparent);
 
-            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiRtScale);
-            Resources.RoundedCornerEffect.Parameters["radius"].SetValue(3f);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "scale", Game1.UiRtScale);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "radius", 3f);
 
             // draw the background
             spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Matrix.CreateScale(Game1.UiRtScale));
 
-            Resources.RoundedCornerEffect.Parameters["width"].SetValue(_background0.Width);
-            Resources.RoundedCornerEffect.Parameters["height"].SetValue(_background0.Height);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "width", _background0.Width);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "height", _background0.Height);
             spriteBatch.Draw(Resources.SprWhite, _background0, Values.InventoryBackgroundColorTop);
 
-            Resources.RoundedCornerEffect.Parameters["width"].SetValue(_background1.Width);
-            Resources.RoundedCornerEffect.Parameters["height"].SetValue(_background1.Height);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "width", _background1.Width);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "height", _background1.Height);
             spriteBatch.Draw(Resources.SprWhite, _background1, Values.InventoryBackgroundColor);
 
             spriteBatch.End();
@@ -366,9 +366,9 @@ namespace ProjectZ.InGame.Overlay
 
         private void DrawBackground(SpriteBatch spriteBatch, Point offset, Rectangle rectangle, float radius = 3f)
         {
-            Resources.RoundedCornerEffect.Parameters["radius"].SetValue(radius);
-            Resources.RoundedCornerEffect.Parameters["width"].SetValue(rectangle.Width);
-            Resources.RoundedCornerEffect.Parameters["height"].SetValue(rectangle.Height);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "radius", radius);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "width", rectangle.Width);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "height", rectangle.Height);
 
             spriteBatch.Draw(Resources.SprWhite, new Rectangle(offset.X + rectangle.X, offset.Y + rectangle.Y, rectangle.Width, rectangle.Height), Color.Black * 0.15f);
         }

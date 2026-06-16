@@ -139,17 +139,18 @@ namespace ProjectZ.InGame.Things
                 Game1.GameManager.CurrentRenderWidth, Game1.GameManager.CurrentRenderHeight, 0, 0, -1);
             outMatrix = MapManager.Camera.TransformMatrix * projectionMatrix;
 
-            Resources.FullShadowEffect.Parameters["xViewProjection"].SetValue(outMatrix);
-            Resources.FullShadowEffect.Parameters["height"].SetValue(ShadowHeight);
-            Resources.FullShadowEffect.Parameters["offsetX"].SetValue(ShadowOffset);
+            Resources.SetEffectParameter(Resources.FullShadowEffect, "xViewProjection", outMatrix);
+            Resources.SetEffectParameter(Resources.FullShadowEffect, "height", ShadowHeight);
+            Resources.SetEffectParameter(Resources.FullShadowEffect, "offsetX", ShadowOffset);
 
-            foreach (var pass in Resources.FullShadowEffect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                Game1.Graphics.GraphicsDevice.Textures[0] = LastShadowTexture;
-                Game1.Graphics.GraphicsDevice.DrawUserIndexedPrimitives(
-                    PrimitiveType.TriangleList, ShadowVertexArray, 0, CurrentShadowIndex * 4, IndexDataShadow, 0, CurrentShadowIndex * 2);
-            }
+            if (Resources.FullShadowEffect != null)
+                foreach (var pass in Resources.FullShadowEffect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+                    Game1.Graphics.GraphicsDevice.Textures[0] = LastShadowTexture;
+                    Game1.Graphics.GraphicsDevice.DrawUserIndexedPrimitives(
+                        PrimitiveType.TriangleList, ShadowVertexArray, 0, CurrentShadowIndex * 4, IndexDataShadow, 0, CurrentShadowIndex * 2);
+                }
         }
 
         public static void SetIndexBuffer(short[] buffer, int position, int offset)

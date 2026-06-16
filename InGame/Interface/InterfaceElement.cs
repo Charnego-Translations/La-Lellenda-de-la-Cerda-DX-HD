@@ -124,10 +124,10 @@ namespace ProjectZ.InGame.Interface
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, Resources.RoundedCornerEffect, Game1.GetMatrix);
 
-                Resources.RoundedCornerEffect.Parameters["radius"].SetValue(CornerRadius);
-                Resources.RoundedCornerEffect.Parameters["width"].SetValue(Size.X);
-                Resources.RoundedCornerEffect.Parameters["height"].SetValue(Size.Y);
-                Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiScale);
+                Resources.SetEffectParameter(Resources.RoundedCornerEffect, "radius", CornerRadius);
+                Resources.SetEffectParameter(Resources.RoundedCornerEffect, "width", Size.X);
+                Resources.SetEffectParameter(Resources.RoundedCornerEffect, "height", Size.Y);
+                Resources.SetEffectParameter(Resources.RoundedCornerEffect, "scale", Game1.UiScale);
 
                 // draw the background
                 spriteBatch.Draw(Resources.SprWhite, new Rectangle(

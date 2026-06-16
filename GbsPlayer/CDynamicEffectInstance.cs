@@ -1,13 +1,13 @@
-﻿using System;
+﻿#if WINDOWS
+using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Audio;
 using SharpDX;
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
 
 namespace GbsPlayer
 {
-    public class CDynamicEffectInstance
+    public class CDynamicEffectInstance : IAudioOutput
     {
         struct AudioBlock
         {
@@ -24,7 +24,7 @@ namespace GbsPlayer
         private SourceVoice _voice;
         private WaveFormat _format;
 
-        public SoundState State = SoundState.Stopped;
+        public SoundState State { get; private set; } = SoundState.Stopped;
 
         public CDynamicEffectInstance(int sampleRate)
         {
@@ -122,3 +122,4 @@ namespace GbsPlayer
         }
     }
 }
+#endif

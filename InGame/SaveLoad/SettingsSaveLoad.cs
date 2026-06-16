@@ -5,7 +5,7 @@ namespace ProjectZ.InGame.SaveLoad
 {
     class SettingsSaveLoad
     {
-        private static readonly string SettingsFileName = "settings";
+        private static string SettingsFileName => Values.PathSaveFolder + "settings";
 
         public static void LoadSettings()
         {

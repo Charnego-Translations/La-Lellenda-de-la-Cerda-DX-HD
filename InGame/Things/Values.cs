@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace ProjectZ.InGame.Things
@@ -33,9 +34,19 @@ namespace ProjectZ.InGame.Things
 
         public static Color[] SkirtColors = { new Color(16, 168, 64), new Color(0, 38, 255), new Color(255, 0, 0) };
 
-        public static string PathSaveFolder = "SaveFiles/";
+        public static string PathSaveFolder =
+#if MACOSX
+            AppContext.BaseDirectory + "SaveFiles/";
+#else
+            "SaveFiles/";
+#endif
         
-        public static string PathContentFolder = "Data/";
+        public static string PathContentFolder =
+#if MACOSX
+            AppContext.BaseDirectory + "Data/";
+#else
+            "Data/";
+#endif
         public static string PathLanguageFolder => PathContentFolder + "Languages/";
         public static string PathMapsFolder => PathContentFolder + "Maps/";
         public static string PathTilesetFolder => PathContentFolder + "Maps/Tilesets/";

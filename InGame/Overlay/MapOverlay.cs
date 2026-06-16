@@ -288,10 +288,10 @@ namespace ProjectZ.InGame.Overlay
 
         public void Draw(SpriteBatch spriteBatch, Rectangle drawPosition, Color color, Matrix? matrix = null)
         {
-            Resources.RoundedCornerEffect.Parameters["scale"].SetValue(Game1.UiRtScale);
-            Resources.RoundedCornerEffect.Parameters["radius"].SetValue(2f);
-            Resources.RoundedCornerEffect.Parameters["width"].SetValue(_width);
-            Resources.RoundedCornerEffect.Parameters["height"].SetValue(_height);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "scale", Game1.UiRtScale);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "radius", 2f);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "width", _width);
+            Resources.SetEffectParameter(Resources.RoundedCornerEffect, "height", _height);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, Resources.RoundedCornerEffect, matrix);
 

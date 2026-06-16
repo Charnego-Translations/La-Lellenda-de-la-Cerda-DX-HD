@@ -156,7 +156,11 @@ namespace ProjectZ
 #endif
 
             Graphics = new GraphicsDeviceManager(this);
+#if MACOSX
+            Content.RootDirectory = AppContext.BaseDirectory + "Content";
+#else
             Content.RootDirectory = "Content";
+#endif
 
             Graphics.GraphicsProfile = GraphicsProfile.HiDef;
             Graphics.PreferredBackBufferWidth = 1500;
@@ -208,11 +212,6 @@ namespace ProjectZ
 
         protected override void LoadContent()
         {
-#if MACOSX
-            // not sure how to copy the files in the correct directory...
-            Content.RootDirectory += "/bin/MacOSX";
-#endif
-
             OnUpdateScale();
 
             // game control stuff
@@ -475,8 +474,8 @@ namespace ProjectZ
             }
 
             {
-                Resources.BlurEffect.Parameters["sprBlur"].SetValue(_renderTarget2);
-                Resources.RoundedCornerBlurEffect.Parameters["sprBlur"].SetValue(_renderTarget2);
+                Resources.SetEffectParameter(Resources.BlurEffect, "sprBlur", _renderTarget2);
+                Resources.SetEffectParameter(Resources.RoundedCornerBlurEffect, "sprBlur", _renderTarget2);
 
                 SpriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.AnisotropicClamp, null, null, Resources.RoundedCornerBlurEffect, GetMatrix);
 
@@ -522,15 +521,15 @@ namespace ProjectZ
 
         private void BlurImage()
         {
-            Resources.BlurEffectH.Parameters["pixelX"].SetValue(1.0f / _renderTarget1.Width);
-            Resources.BlurEffectV.Parameters["pixelY"].SetValue(1.0f / _renderTarget1.Height);
+            Resources.SetEffectParameter(Resources.BlurEffectH, "pixelX", 1.0f / _renderTarget1.Width);
+            Resources.SetEffectParameter(Resources.BlurEffectV, "pixelY", 1.0f / _renderTarget1.Height);
 
             var mult0 = _blurValue;
             var mult1 = (1 - _blurValue * 2) / 2;
-            Resources.BlurEffectH.Parameters["mult0"].SetValue(mult0);
-            Resources.BlurEffectH.Parameters["mult1"].SetValue(mult1);
-            Resources.BlurEffectV.Parameters["mult0"].SetValue(mult0);
-            Resources.BlurEffectV.Parameters["mult1"].SetValue(mult1);
+            Resources.SetEffectParameter(Resources.BlurEffectH, "mult0", mult0);
+            Resources.SetEffectParameter(Resources.BlurEffectH, "mult1", mult1);
+            Resources.SetEffectParameter(Resources.BlurEffectV, "mult0", mult0);
+            Resources.SetEffectParameter(Resources.BlurEffectV, "mult1", mult1);
 
             // resize
             Graphics.GraphicsDevice.SetRenderTarget(_renderTarget2);
@@ -815,6 +814,25 @@ namespace ProjectZ
                     }
                 }
             }
+#else
+            GameSettings.IsFullscreen = !GameSettings.IsFullscreen;
+
+            if (!Graphics.IsFullScreen)
+            {
+                _lastWindowWidth = Graphics.PreferredBackBufferWidth;
+                _lastWindowHeight = Graphics.PreferredBackBufferHeight;
+
+                var displayMode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
+                Graphics.PreferredBackBufferWidth = displayMode.Width;
+                Graphics.PreferredBackBufferHeight = displayMode.Height;
+            }
+            else
+            {
+                Graphics.PreferredBackBufferWidth = _lastWindowWidth;
+                Graphics.PreferredBackBufferHeight = _lastWindowHeight;
+            }
+
+            Graphics.ToggleFullScreen();
 #endif
         }
 
@@ -947,11 +965,11 @@ namespace ProjectZ
 
             MainRenderTarget?.Dispose();
             MainRenderTarget = new RenderTarget2D(Graphics.GraphicsDevice, width, height);
-            Resources.BlurEffect.Parameters["width"].SetValue(width);
-            Resources.BlurEffect.Parameters["height"].SetValue(height);
+            Resources.SetEffectParameter(Resources.BlurEffect, "width", width);
+            Resources.SetEffectParameter(Resources.BlurEffect, "height", height);
 
-            Resources.RoundedCornerBlurEffect.Parameters["textureWidth"].SetValue(width);
-            Resources.RoundedCornerBlurEffect.Parameters["textureHeight"].SetValue(height);
+            Resources.SetEffectParameter(Resources.RoundedCornerBlurEffect, "textureWidth", width);
+            Resources.SetEffectParameter(Resources.RoundedCornerBlurEffect, "textureHeight", height);
 
             // update the blur rendertargets
             var blurScale = MathHelper.Clamp(MapManager.Camera.Scale / 2, 1, 10);
