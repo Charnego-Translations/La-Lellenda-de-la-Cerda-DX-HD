@@ -21,3 +21,5 @@ Mirate [wiki](https://github.com/ihm-tswow/Links-Awakening-DX-HD/wiki) si quiere
 ## Obtener juego juegable
 
 Para obtener el juego en sí, usa `publish.bat`, que produse la carpeta `Publish` con el juego, para viciarte o para enviar a tus enemigos.
+
+Desde Guindors no se puede compilar bien para MacAcos y Leenucs, pero los shaders no van bien en estos sistmas. Cosas de la bida.
