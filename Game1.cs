@@ -814,6 +814,25 @@ namespace ProjectZ
                     }
                 }
             }
+#elif MACOSX
+            GameSettings.IsFullscreen = !GameSettings.IsFullscreen;
+
+            if (!Graphics.IsFullScreen)
+            {
+                _lastWindowWidth = Graphics.PreferredBackBufferWidth;
+                _lastWindowHeight = Graphics.PreferredBackBufferHeight;
+
+                var displayMode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
+                Graphics.PreferredBackBufferWidth = displayMode.Width;
+                Graphics.PreferredBackBufferHeight = displayMode.Height;
+            }
+            else
+            {
+                Graphics.PreferredBackBufferWidth = _lastWindowWidth;
+                Graphics.PreferredBackBufferHeight = _lastWindowHeight;
+            }
+
+            Graphics.ToggleFullScreen();
 #endif
         }
 
