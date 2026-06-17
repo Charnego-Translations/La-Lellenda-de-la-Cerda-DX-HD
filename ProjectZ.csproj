@@ -86,19 +86,36 @@
     <RemoveDir Directories="$(PublishDir)"></RemoveDir>
   </Target>
 
-  <!-- On macOS, the MGCB effect compiler (MGFXC) requires Wine to compile shaders
-       (the .fx files use HLSL compiled by d3dcompiler_47.dll).
-       Non-shader content builds fine via ARM64-native libraries (FreeImage, freetype).
-       This target bypasses the MGCB failure by copying any cached built content. -->
-  <Target Name="CopyMacContentToOutput" AfterTargets="Build" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
-    <PropertyGroup>
-      <_ContentCache>Content/bin/DesktopGL/Content</_ContentCache>
-      <_ContentOutput>$(OutputPath)Content</_ContentOutput>
-    </PropertyGroup>
-    <Message Text="Copying built content to output directory..." Importance="High" />
+  <!-- On Linux, MGCB can't compile .fx shaders (needs d3dcompiler_47 via Wine) nor
+       .spritefont files (reference Windows fonts Arial/Courier New not available).
+       This target patches those entries out before MGCB runs, then restores after.
+       Pre-built .xnb shaders and fonts are copied from the cache. -->
+  <Target Name="StripShadersFromMgcb" BeforeTargets="RunContentBuilder" 
+          Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <Message Text="Removing .fx and .spritefont entries from Content.mgcb for Linux build..." Importance="High" />
+    <Copy SourceFiles="Content/Content.mgcb" DestinationFiles="Content/Content.mgcb.bak" />
+    <Exec Command="sed -i '/^#begin Shader\//,/^\/build:Shader\//s/^/#/g' 'Content/Content.mgcb'" />
+    <Exec Command="sed -i '/^#begin.*\.spritefont/,/^\/build:/s/^/#/g' 'Content/Content.mgcb'" />
+  </Target>
+
+  <Target Name="RestoreMgcbAfterBuild" AfterTargets="Build" 
+          Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <Copy SourceFiles="Content/Content.mgcb.bak" DestinationFiles="Content/Content.mgcb" />
+    <Delete Files="Content/Content.mgcb.bak" />
+  </Target>
+
+  <!-- After building, copy pre-built .xnb for shaders and fonts (not compiled on Linux) -->
+  <Target Name="CopyLinuxPrebuiltXnb" AfterTargets="RestoreMgcbAfterBuild" 
+          Condition="$([MSBuild]::IsOSPlatform('Linux'))">
     <ItemGroup>
-      <_CachedXnbFiles Include="$(_ContentCache)/**/*.xnb" />
+      <_ShaderXnb Include="Content/bin/DesktopGL/Content/Shader/*.xnb" />
+      <_FontXnb Include="Content/bin/DesktopGL/Content/Fonts/*.xnb" />
     </ItemGroup>
-    <Copy SourceFiles="@(_CachedXnbFiles)" DestinationFolder="$(_ContentOutput)/%(RecursiveDir)" />
+    <Copy SourceFiles="@(_ShaderXnb)" 
+          DestinationFolder="$(OutputPath)Content/Shader/" 
+          Condition="Exists('Content/bin/DesktopGL/Content/Shader/')" />
+    <Copy SourceFiles="@(_FontXnb)" 
+          DestinationFolder="$(OutputPath)Content/Fonts/" 
+          Condition="Exists('Content/bin/DesktopGL/Content/Fonts/')" />
   </Target>
 </Project>
